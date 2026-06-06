@@ -14,7 +14,13 @@ A fully offline Spanish verb conjugator built with Python and Flask.
 
   # Offline Spanish Conjugator
 
-![Main Screen]([screenshots/main.png](https://github.com/Commerce2451/offline-spanish-conjugator/blob/main/Screenshot%20from%202026-06-06%2008-00-48.png))
+![Main Screen]([(https://github.com/Commerce2451/offline-spanish-conjugator/blob/main/Screenshot%20from%202026-06-06%2008-00-48.png))
+
+## Known Limitations
+
+- Uses mlconjug3 as the primary conjugation engine.
+- Some irregular verbs are manually overridden.
+- Additional irregular verb coverage is planned.
 
 ## Installation
 
