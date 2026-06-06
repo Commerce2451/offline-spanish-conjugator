@@ -38,6 +38,9 @@ VERB_DEFINITIONS = {
     "dar": "to give",
     "ver": "to see",
     "saber": "to know (facts/information)",
+    "traer": "to bring",
+    "oír": "to hear",
+    "conocer": "to know; to meet; to be familiar with",
 }
 
 PERSONS = {
@@ -411,6 +414,87 @@ IRREGULAR_OVERRIDES = {
             "1p": "sepamos", "2p": "sepáis", "3p": "sepan",
         },
     },
+
+    "traer": {
+        "Present": {
+            "1s": "traigo", "2s": "traes", "3s": "trae",
+            "1p": "traemos", "2p": "traéis", "3p": "traen",
+        },
+        "Imperfect": {
+            "1s": "traía", "2s": "traías", "3s": "traía",
+            "1p": "traíamos", "2p": "traíais", "3p": "traían",
+        },
+        "Preterite": {
+            "1s": "traje", "2s": "trajiste", "3s": "trajo",
+            "1p": "trajimos", "2p": "trajisteis", "3p": "trajeron",
+        },
+        "Future": {
+            "1s": "traeré", "2s": "traerás", "3s": "traerá",
+            "1p": "traeremos", "2p": "traeréis", "3p": "traerán",
+        },
+        "Conditional": {
+            "1s": "traería", "2s": "traerías", "3s": "traería",
+            "1p": "traeríamos", "2p": "traeríais", "3p": "traerían",
+        },
+        "Subjunctive Present": {
+            "1s": "traiga", "2s": "traigas", "3s": "traiga",
+            "1p": "traigamos", "2p": "traigáis", "3p": "traigan",
+        },
+    },
+
+    "oír": {
+        "Present": {
+            "1s": "oigo", "2s": "oyes", "3s": "oye",
+            "1p": "oímos", "2p": "oís", "3p": "oyen",
+        },
+        "Imperfect": {
+            "1s": "oía", "2s": "oías", "3s": "oía",
+            "1p": "oíamos", "2p": "oíais", "3p": "oían",
+        },
+        "Preterite": {
+            "1s": "oí", "2s": "oíste", "3s": "oyó",
+            "1p": "oímos", "2p": "oísteis", "3p": "oyeron",
+        },
+        "Future": {
+            "1s": "oiré", "2s": "oirás", "3s": "oirá",
+            "1p": "oiremos", "2p": "oiréis", "3p": "oirán",
+        },
+        "Conditional": {
+            "1s": "oiría", "2s": "oirías", "3s": "oiría",
+            "1p": "oiríamos", "2p": "oiríais", "3p": "oirían",
+        },
+        "Subjunctive Present": {
+            "1s": "oiga", "2s": "oigas", "3s": "oiga",
+            "1p": "oigamos", "2p": "oigáis", "3p": "oigan",
+        },
+    },
+
+    "conocer": {
+        "Present": {
+            "1s": "conozco", "2s": "conoces", "3s": "conoce",
+            "1p": "conocemos", "2p": "conocéis", "3p": "conocen",
+        },
+        "Imperfect": {
+            "1s": "conocía", "2s": "conocías", "3s": "conocía",
+            "1p": "conocíamos", "2p": "conocíais", "3p": "conocían",
+        },
+        "Preterite": {
+            "1s": "conocí", "2s": "conociste", "3s": "conoció",
+            "1p": "conocimos", "2p": "conocisteis", "3p": "conocieron",
+        },
+        "Future": {
+            "1s": "conoceré", "2s": "conocerás", "3s": "conocerá",
+            "1p": "conoceremos", "2p": "conoceréis", "3p": "conocerán",
+        },
+        "Conditional": {
+            "1s": "conocería", "2s": "conocerías", "3s": "conocería",
+            "1p": "conoceríamos", "2p": "conoceríais", "3p": "conocerían",
+        },
+        "Subjunctive Present": {
+            "1s": "conozca", "2s": "conozcas", "3s": "conozca",
+            "1p": "conozcamos", "2p": "conozcáis", "3p": "conozcan",
+        },
+    },
 }
 
 EXAMPLE_SUBJECTS = {
@@ -459,6 +543,24 @@ HABER = {
         "1s": "habría", "2s": "habrías", "3s": "habría",
         "1p": "habríamos", "2p": "habríais", "3p": "habrían",
     },
+}
+
+
+IRREGULAR_PAST_PARTICIPLES = {
+    "decir": "dicho",
+    "hacer": "hecho",
+    "poner": "puesto",
+    "ver": "visto",
+    "traer": "traído",
+    "oír": "oído",
+}
+
+IRREGULAR_GERUNDS = {
+    "decir": "diciendo",
+    "venir": "viniendo",
+    "poder": "pudiendo",
+    "traer": "trayendo",
+    "oír": "oyendo",
 }
 
 VERB_CONTEXTS = {
@@ -582,6 +684,78 @@ VERB_CONTEXTS = {
         "2p": "los archivos",
         "3p": "al autobús",
     },
+    "venir": {
+        "1s": "a casa después del trabajo",
+        "2s": "a clase temprano",
+        "3s": "con sus amigos",
+        "1p": "a la reunión",
+        "2p": "al parque",
+        "3p": "mañana por la tarde",
+    },
+    "poner": {
+        "1s": "el libro sobre la mesa",
+        "2s": "la llave en la puerta",
+        "3s": "la mochila en el suelo",
+        "1p": "la comida en la mesa",
+        "2p": "los papeles en orden",
+        "3p": "sus cosas en la habitación",
+    },
+    "salir": {
+        "1s": "de casa temprano",
+        "2s": "del trabajo tarde",
+        "3s": "con sus amigos",
+        "1p": "a caminar",
+        "2p": "de la escuela",
+        "3p": "por la noche",
+    },
+    "dar": {
+        "1s": "una respuesta clara",
+        "2s": "un regalo a tu amigo",
+        "3s": "clases de español",
+        "1p": "gracias por la ayuda",
+        "2p": "buenos consejos",
+        "3p": "comida a los niños",
+    },
+    "ver": {
+        "1s": "una película en casa",
+        "2s": "las noticias por la mañana",
+        "3s": "a su familia los domingos",
+        "1p": "el partido juntos",
+        "2p": "muchas fotos",
+        "3p": "la televisión por la noche",
+    },
+    "saber": {
+        "1s": "la respuesta correcta",
+        "2s": "mucho de tecnología",
+        "3s": "la verdad",
+        "1p": "cómo resolver el problema",
+        "2p": "la dirección",
+        "3p": "qué hacer",
+    },
+    "traer": {
+        "1s": "comida para la cena",
+        "2s": "tu mochila a clase",
+        "3s": "flores para su madre",
+        "1p": "herramientas al taller",
+        "2p": "los documentos necesarios",
+        "3p": "buenas noticias",
+    },
+    "oír": {
+        "1s": "música en la radio",
+        "2s": "ruidos en la calle",
+        "3s": "la voz del profesor",
+        "1p": "el anuncio claramente",
+        "2p": "la conversación",
+        "3p": "el teléfono sonar",
+    },
+    "conocer": {
+        "1s": "a muchas personas nuevas",
+        "2s": "bien la ciudad",
+        "3s": "a mi hermano",
+        "1p": "ese restaurante",
+        "2p": "la historia del lugar",
+        "3p": "a los vecinos",
+    },
 }
 
 def heading(level, title):
@@ -603,6 +777,9 @@ def stem(verb):
     return verb[:-2]
 
 def past_participle(verb):
+    if verb in IRREGULAR_PAST_PARTICIPLES:
+        return IRREGULAR_PAST_PARTICIPLES[verb]
+
     kind = ending_type(verb)
     if kind == "ar":
         return stem(verb) + "ado"
@@ -611,6 +788,9 @@ def past_participle(verb):
     return verb
 
 def gerund(verb):
+    if verb in IRREGULAR_GERUNDS:
+        return IRREGULAR_GERUNDS[verb]
+
     kind = ending_type(verb)
     if kind == "ar":
         return stem(verb) + "ando"
