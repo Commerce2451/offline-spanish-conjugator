@@ -212,6 +212,42 @@ PERSONS = {
     "3p": "ellos / ellas / ustedes",
 }
 
+PRONUNCIATIONS = {
+    "hablar": {"ipa": "/aˈβlaɾ/", "hint": "ah-BLAR"},
+    "tomar": {"ipa": "/toˈmaɾ/", "hint": "toh-MAR"},
+    "comer": {"ipa": "/koˈmeɾ/", "hint": "koh-MER"},
+    "vivir": {"ipa": "/biˈβiɾ/", "hint": "bee-BEER"},
+    "estudiar": {"ipa": "/estuˈðjaɾ/", "hint": "es-too-DYAR"},
+    "trabajar": {"ipa": "/tɾaβaˈxaɾ/", "hint": "trah-bah-HAR"},
+    "caminar": {"ipa": "/kamiˈnaɾ/", "hint": "kah-mee-NAR"},
+    "beber": {"ipa": "/beˈβeɾ/", "hint": "beh-BER"},
+    "leer": {"ipa": "/leˈeɾ/", "hint": "leh-ER"},
+    "escribir": {"ipa": "/eskɾiˈβiɾ/", "hint": "es-kree-BEER"},
+    "aprender": {"ipa": "/apɾenˈdeɾ/", "hint": "ah-pren-DER"},
+    "correr": {"ipa": "/koˈreɾ/", "hint": "koh-RER"},
+    "abrir": {"ipa": "/aˈβɾiɾ/", "hint": "ah-BREER"},
+    "recibir": {"ipa": "/resiˈβiɾ/", "hint": "reh-see-BEER"},
+    "subir": {"ipa": "/suˈβiɾ/", "hint": "soo-BEER"},
+    "ser": {"ipa": "/seɾ/", "hint": "ser"},
+    "estar": {"ipa": "/esˈtaɾ/", "hint": "es-TAR"},
+    "ir": {"ipa": "/iɾ/", "hint": "eer"},
+    "tener": {"ipa": "/teˈneɾ/", "hint": "teh-NER"},
+    "hacer": {"ipa": "/aˈseɾ/", "hint": "ah-SER"},
+    "poder": {"ipa": "/poˈðeɾ/", "hint": "poh-DER"},
+    "querer": {"ipa": "/keˈɾeɾ/", "hint": "keh-RER"},
+    "decir": {"ipa": "/deˈsiɾ/", "hint": "deh-SEER"},
+    "venir": {"ipa": "/beˈniɾ/", "hint": "beh-NEER"},
+    "poner": {"ipa": "/poˈneɾ/", "hint": "poh-NER"},
+    "salir": {"ipa": "/saˈliɾ/", "hint": "sah-LEER"},
+    "dar": {"ipa": "/daɾ/", "hint": "dar"},
+    "ver": {"ipa": "/beɾ/", "hint": "ber"},
+    "saber": {"ipa": "/saˈβeɾ/", "hint": "sah-BER"},
+    "traer": {"ipa": "/tɾaˈeɾ/", "hint": "trah-ER"},
+    "oír": {"ipa": "/oˈiɾ/", "hint": "oh-EER"},
+    "conocer": {"ipa": "/konoˈseɾ/", "hint": "koh-noh-SER"},
+}
+
+
 IRREGULAR_OVERRIDES = {
     "ser": {
         "Present": {
@@ -958,6 +994,44 @@ def gerund(verb):
         return stem(verb) + "iendo"
     return verb
 
+def verb_type_label(verb):
+    kind = ending_type(verb)
+    if kind:
+        return f"-{kind.upper()} verb"
+    return "Verb"
+
+def regularity_label(verb):
+    if verb in IRREGULAR_OVERRIDES or verb in IRREGULAR_PAST_PARTICIPLES or verb in IRREGULAR_GERUNDS:
+        return "Irregular / manually verified"
+    return "Regular"
+
+def difficulty_label(verb):
+    if verb in ["hablar", "tomar", "comer", "vivir", "estudiar", "trabajar"]:
+        return "Beginner"
+    if verb in IRREGULAR_OVERRIDES:
+        return "Intermediate"
+    return "Beginner / intermediate"
+
+def pronunciation_block(verb):
+    pronunciation = PRONUNCIATIONS.get(verb, {})
+    ipa = pronunciation.get("ipa", "")
+    hint = pronunciation.get("hint", "")
+
+    if not ipa and not hint:
+        return ""
+
+    hint_html = f"<p><strong>Sound hint:</strong> {hint}</p>" if hint else ""
+    ipa_html = f"<p><strong>IPA:</strong> <code>{ipa}</code></p>" if ipa else ""
+
+    return f"""
+    <div class="pronunciation-card">
+        <h3>Pronunciation</h3>
+        {ipa_html}
+        {hint_html}
+        <p class="small-note">Pronunciation hints are approximate learning aids. IPA is included when available.</p>
+    </div>
+    """
+
 def verb_definition_box(verb):
     entry = VERB_DEFINITIONS.get(verb)
 
@@ -967,6 +1041,7 @@ def verb_definition_box(verb):
             <h2>{verb}</h2>
             <p><strong>English meaning:</strong> No local definition found yet.</p>
             <p>Add this verb to <code>VERB_DEFINITIONS</code> in <code>app.py</code>.</p>
+            {pronunciation_block(verb)}
         </div>
         """
 
@@ -975,7 +1050,13 @@ def verb_definition_box(verb):
         return f"""
         <div class="verb-card">
             <h2>{verb}</h2>
+            <div class="metadata-row">
+                <span class="badge">{verb_type_label(verb)}</span>
+                <span class="badge">{regularity_label(verb)}</span>
+                <span class="badge">{difficulty_label(verb)}</span>
+            </div>
             <p><strong>English meaning:</strong> {entry}</p>
+            {pronunciation_block(verb)}
         </div>
         """
 
@@ -986,15 +1067,24 @@ def verb_definition_box(verb):
 
     tags_html = ""
     if tags:
-        tags_html = "<p><strong>Tags:</strong> " + ", ".join(tags) + "</p>"
+        tag_items = "".join(f"<span class='tag'>{tag}</span>" for tag in tags)
+        tags_html = f"<div class='tag-row'><strong>Tags:</strong> {tag_items}</div>"
 
     return f"""
     <div class="verb-card">
         <h2>{verb}</h2>
+
+        <div class="metadata-row">
+            <span class="badge">{verb_type_label(verb)}</span>
+            <span class="badge">{regularity_label(verb)}</span>
+            <span class="badge">{difficulty_label(verb)}</span>
+        </div>
+
         <p><strong>English meaning:</strong> {english}</p>
-        <p><strong>Notes:</strong> {notes}</p>
-        <p><strong>Example:</strong> {example}</p>
+        <p><strong>Usage notes:</strong> {notes}</p>
+        <p><strong>Example:</strong> <em>{example}</em></p>
         {tags_html}
+        {pronunciation_block(verb)}
     </div>
     """
 
