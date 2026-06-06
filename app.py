@@ -9,38 +9,198 @@ app = Flask(__name__)
 conjugator = mlconjug3.Conjugator(language="es")
 
 VERB_DEFINITIONS = {
-    "hablar": "to speak; to talk",
-    "tomar": "to take; to drink",
-    "comer": "to eat",
-    "vivir": "to live",
-    "estudiar": "to study",
-    "trabajar": "to work",
-    "caminar": "to walk",
-    "beber": "to drink",
-    "leer": "to read",
-    "escribir": "to write",
-    "aprender": "to learn",
-    "correr": "to run",
-    "abrir": "to open",
-    "recibir": "to receive",
-    "subir": "to go up; to upload",
-    "ser": "to be (identity, origin, characteristics)",
-    "estar": "to be (location, condition, temporary state)",
-    "ir": "to go",
-    "tener": "to have",
-    "hacer": "to do; to make",
-    "poder": "to be able to; can",
-    "querer": "to want; to love",
-    "decir": "to say; to tell",
-    "venir": "to come",
-    "poner": "to put; to place",
-    "salir": "to leave; to go out",
-    "dar": "to give",
-    "ver": "to see",
-    "saber": "to know (facts/information)",
-    "traer": "to bring",
-    "oír": "to hear",
-    "conocer": "to know; to meet; to be familiar with",
+    "hablar": {
+        "english": "to speak; to talk",
+        "notes": "Use hablar for speaking, talking, or having a conversation.",
+        "example": "Me gusta hablar español.",
+        "tags": ["communication", "regular -ar"],
+    },
+    "tomar": {
+        "english": "to take; to drink",
+        "notes": "Tomar can mean to take something, to drink something, or to take transportation.",
+        "example": "Voy a tomar café por la mañana.",
+        "tags": ["daily life", "regular -ar"],
+    },
+    "comer": {
+        "english": "to eat",
+        "notes": "Use comer for eating food or having a meal.",
+        "example": "Vamos a comer juntos.",
+        "tags": ["food", "regular -er"],
+    },
+    "vivir": {
+        "english": "to live",
+        "notes": "Use vivir for where someone lives or how someone experiences life.",
+        "example": "Quiero vivir cerca del parque.",
+        "tags": ["life", "regular -ir"],
+    },
+    "estudiar": {
+        "english": "to study",
+        "notes": "Use estudiar for school, practice, review, or learning a subject.",
+        "example": "Necesito estudiar para el examen.",
+        "tags": ["education", "regular -ar"],
+    },
+    "trabajar": {
+        "english": "to work",
+        "notes": "Use trabajar for jobs, labor, projects, and work activities.",
+        "example": "Trabajo en equipo todos los días.",
+        "tags": ["work", "regular -ar"],
+    },
+    "caminar": {
+        "english": "to walk",
+        "notes": "Use caminar for walking, either as transportation or exercise.",
+        "example": "Me gusta caminar por el parque.",
+        "tags": ["movement", "regular -ar"],
+    },
+    "beber": {
+        "english": "to drink",
+        "notes": "Use beber specifically for drinking liquids.",
+        "example": "Debo beber más agua.",
+        "tags": ["food", "regular -er"],
+    },
+    "leer": {
+        "english": "to read",
+        "notes": "Use leer for reading books, signs, messages, instructions, and articles.",
+        "example": "Me gusta leer libros en español.",
+        "tags": ["education", "regular -er"],
+    },
+    "escribir": {
+        "english": "to write",
+        "notes": "Use escribir for writing messages, letters, notes, and documents.",
+        "example": "Voy a escribir un correo electrónico.",
+        "tags": ["communication", "regular -ir"],
+    },
+    "aprender": {
+        "english": "to learn",
+        "notes": "Use aprender for gaining knowledge or skills.",
+        "example": "Quiero aprender palabras nuevas.",
+        "tags": ["education", "regular -er"],
+    },
+    "correr": {
+        "english": "to run",
+        "notes": "Use correr for running, racing, or moving quickly on foot.",
+        "example": "Voy a correr por la mañana.",
+        "tags": ["movement", "regular -er"],
+    },
+    "abrir": {
+        "english": "to open",
+        "notes": "Use abrir for opening doors, windows, books, stores, files, or apps.",
+        "example": "Voy a abrir la puerta.",
+        "tags": ["daily life", "regular -ir"],
+    },
+    "recibir": {
+        "english": "to receive",
+        "notes": "Use recibir for receiving messages, calls, packages, help, or news.",
+        "example": "Espero recibir buenas noticias.",
+        "tags": ["communication", "regular -ir"],
+    },
+    "subir": {
+        "english": "to go up; to upload",
+        "notes": "Use subir for going up, climbing, getting on a bus, or uploading files.",
+        "example": "Voy a subir los archivos.",
+        "tags": ["movement", "technology", "regular -ir"],
+    },
+    "ser": {
+        "english": "to be",
+        "notes": "Use ser for identity, origin, profession, time, and lasting characteristics.",
+        "example": "Soy estudiante de español.",
+        "tags": ["core verb", "irregular"],
+    },
+    "estar": {
+        "english": "to be",
+        "notes": "Use estar for location, condition, emotions, and temporary states.",
+        "example": "Estoy en casa.",
+        "tags": ["core verb", "irregular"],
+    },
+    "ir": {
+        "english": "to go",
+        "notes": "Use ir for going somewhere or for near-future plans with ir a + infinitive.",
+        "example": "Voy a estudiar esta noche.",
+        "tags": ["core verb", "movement", "irregular"],
+    },
+    "tener": {
+        "english": "to have",
+        "notes": "Use tener for possession, age, obligations, and common expressions like tener que.",
+        "example": "Tengo que trabajar mañana.",
+        "tags": ["core verb", "irregular"],
+    },
+    "hacer": {
+        "english": "to do; to make",
+        "notes": "Use hacer for doing tasks, making things, weather expressions, and time expressions.",
+        "example": "Voy a hacer la tarea.",
+        "tags": ["core verb", "irregular"],
+    },
+    "poder": {
+        "english": "to be able to; can",
+        "notes": "Use poder for ability, possibility, and permission.",
+        "example": "Puedo ayudarte hoy.",
+        "tags": ["modal verb", "irregular"],
+    },
+    "querer": {
+        "english": "to want; to love",
+        "notes": "Use querer for wanting something or loving someone.",
+        "example": "Quiero aprender más español.",
+        "tags": ["emotion", "modal verb", "irregular"],
+    },
+    "decir": {
+        "english": "to say; to tell",
+        "notes": "Use decir for saying words, telling information, or reporting what someone says.",
+        "example": "Quiero decir la verdad.",
+        "tags": ["communication", "irregular"],
+    },
+    "venir": {
+        "english": "to come",
+        "notes": "Use venir for coming toward a place, speaker, event, or situation.",
+        "example": "Voy a venir a la reunión.",
+        "tags": ["movement", "irregular"],
+    },
+    "poner": {
+        "english": "to put; to place",
+        "notes": "Use poner for putting, placing, setting, or turning something on.",
+        "example": "Voy a poner el libro en la mesa.",
+        "tags": ["daily life", "irregular"],
+    },
+    "salir": {
+        "english": "to leave; to go out",
+        "notes": "Use salir for leaving a place, going out, or departing.",
+        "example": "Voy a salir después del trabajo.",
+        "tags": ["movement", "irregular"],
+    },
+    "dar": {
+        "english": "to give",
+        "notes": "Use dar for giving something, offering help, or handing something to someone.",
+        "example": "Voy a dar un regalo a mi amigo.",
+        "tags": ["daily life", "irregular"],
+    },
+    "ver": {
+        "english": "to see",
+        "notes": "Use ver for seeing, watching, or looking at something.",
+        "example": "Quiero ver una película.",
+        "tags": ["perception", "irregular"],
+    },
+    "saber": {
+        "english": "to know",
+        "notes": "Use saber for knowing facts, information, or how to do something.",
+        "example": "Sé hablar un poco de español.",
+        "tags": ["knowledge", "irregular"],
+    },
+    "traer": {
+        "english": "to bring",
+        "notes": "Use traer for bringing something or someone toward the speaker or location.",
+        "example": "Voy a traer comida a la fiesta.",
+        "tags": ["movement", "irregular"],
+    },
+    "oír": {
+        "english": "to hear",
+        "notes": "Use oír for physically hearing sounds or voices.",
+        "example": "Puedo oír la música.",
+        "tags": ["perception", "irregular"],
+    },
+    "conocer": {
+        "english": "to know; to meet; to be familiar with",
+        "notes": "Use conocer for knowing people, places, or being familiar with something.",
+        "example": "Quiero conocer la ciudad.",
+        "tags": ["knowledge", "irregular"],
+    },
 }
 
 PERSONS = {
@@ -799,15 +959,42 @@ def gerund(verb):
     return verb
 
 def verb_definition_box(verb):
-    meaning = VERB_DEFINITIONS.get(
-        verb,
-        "No local definition found yet. Add this verb to VERB_DEFINITIONS in app.py."
-    )
+    entry = VERB_DEFINITIONS.get(verb)
+
+    if not entry:
+        return f"""
+        <div class="verb-card">
+            <h2>{verb}</h2>
+            <p><strong>English meaning:</strong> No local definition found yet.</p>
+            <p>Add this verb to <code>VERB_DEFINITIONS</code> in <code>app.py</code>.</p>
+        </div>
+        """
+
+    # Backward compatibility: allow older simple string definitions.
+    if isinstance(entry, str):
+        return f"""
+        <div class="verb-card">
+            <h2>{verb}</h2>
+            <p><strong>English meaning:</strong> {entry}</p>
+        </div>
+        """
+
+    english = entry.get("english", "")
+    notes = entry.get("notes", "")
+    example = entry.get("example", "")
+    tags = entry.get("tags", [])
+
+    tags_html = ""
+    if tags:
+        tags_html = "<p><strong>Tags:</strong> " + ", ".join(tags) + "</p>"
 
     return f"""
     <div class="verb-card">
         <h2>{verb}</h2>
-        <p><strong>English meaning:</strong> {meaning}</p>
+        <p><strong>English meaning:</strong> {english}</p>
+        <p><strong>Notes:</strong> {notes}</p>
+        <p><strong>Example:</strong> {example}</p>
+        {tags_html}
     </div>
     """
 
