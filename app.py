@@ -1,0 +1,801 @@
+#!/usr/bin/env python3
+from flask import Flask, request
+import warnings
+import mlconjug3
+
+warnings.filterwarnings("ignore")
+
+app = Flask(__name__)
+conjugator = mlconjug3.Conjugator(language="es")
+
+VERB_DEFINITIONS = {
+    "hablar": "to speak; to talk",
+    "tomar": "to take; to drink",
+    "comer": "to eat",
+    "vivir": "to live",
+    "estudiar": "to study",
+    "trabajar": "to work",
+    "caminar": "to walk",
+    "beber": "to drink",
+    "leer": "to read",
+    "escribir": "to write",
+    "aprender": "to learn",
+    "correr": "to run",
+    "abrir": "to open",
+    "recibir": "to receive",
+    "subir": "to go up; to upload",
+}
+
+PERSONS = {
+    "1s": "yo",
+    "2s": "tú",
+    "3s": "él / ella / usted",
+    "1p": "nosotros",
+    "2p": "vosotros",
+    "3p": "ellos / ellas / ustedes",
+}
+
+IRREGULAR_OVERRIDES = {
+    "ser": {
+        "Present": {
+            "1s": "soy", "2s": "eres", "3s": "es",
+            "1p": "somos", "2p": "sois", "3p": "son",
+        },
+        "Imperfect": {
+            "1s": "era", "2s": "eras", "3s": "era",
+            "1p": "éramos", "2p": "erais", "3p": "eran",
+        },
+        "Preterite": {
+            "1s": "fui", "2s": "fuiste", "3s": "fue",
+            "1p": "fuimos", "2p": "fuisteis", "3p": "fueron",
+        },
+        "Future": {
+            "1s": "seré", "2s": "serás", "3s": "será",
+            "1p": "seremos", "2p": "seréis", "3p": "serán",
+        },
+        "Conditional": {
+            "1s": "sería", "2s": "serías", "3s": "sería",
+            "1p": "seríamos", "2p": "seríais", "3p": "serían",
+        },
+        "Subjunctive Present": {
+            "1s": "sea", "2s": "seas", "3s": "sea",
+            "1p": "seamos", "2p": "seáis", "3p": "sean",
+        },
+    },
+
+    "estar": {
+        "Present": {
+            "1s": "estoy", "2s": "estás", "3s": "está",
+            "1p": "estamos", "2p": "estáis", "3p": "están",
+        },
+        "Imperfect": {
+            "1s": "estaba", "2s": "estabas", "3s": "estaba",
+            "1p": "estábamos", "2p": "estabais", "3p": "estaban",
+        },
+        "Preterite": {
+            "1s": "estuve", "2s": "estuviste", "3s": "estuvo",
+            "1p": "estuvimos", "2p": "estuvisteis", "3p": "estuvieron",
+        },
+        "Future": {
+            "1s": "estaré", "2s": "estarás", "3s": "estará",
+            "1p": "estaremos", "2p": "estaréis", "3p": "estarán",
+        },
+        "Conditional": {
+            "1s": "estaría", "2s": "estarías", "3s": "estaría",
+            "1p": "estaríamos", "2p": "estaríais", "3p": "estarían",
+        },
+        "Subjunctive Present": {
+            "1s": "esté", "2s": "estés", "3s": "esté",
+            "1p": "estemos", "2p": "estéis", "3p": "estén",
+        },
+    },
+
+    "ir": {
+        "Present": {
+            "1s": "voy", "2s": "vas", "3s": "va",
+            "1p": "vamos", "2p": "vais", "3p": "van",
+        },
+        "Imperfect": {
+            "1s": "iba", "2s": "ibas", "3s": "iba",
+            "1p": "íbamos", "2p": "ibais", "3p": "iban",
+        },
+        "Preterite": {
+            "1s": "fui", "2s": "fuiste", "3s": "fue",
+            "1p": "fuimos", "2p": "fuisteis", "3p": "fueron",
+        },
+        "Future": {
+            "1s": "iré", "2s": "irás", "3s": "irá",
+            "1p": "iremos", "2p": "iréis", "3p": "irán",
+        },
+        "Conditional": {
+            "1s": "iría", "2s": "irías", "3s": "iría",
+            "1p": "iríamos", "2p": "iríais", "3p": "irían",
+        },
+        "Subjunctive Present": {
+            "1s": "vaya", "2s": "vayas", "3s": "vaya",
+            "1p": "vayamos", "2p": "vayáis", "3p": "vayan",
+        },
+    },
+
+    "tener": {
+        "Present": {
+            "1s": "tengo", "2s": "tienes", "3s": "tiene",
+            "1p": "tenemos", "2p": "tenéis", "3p": "tienen",
+        },
+        "Preterite": {
+            "1s": "tuve", "2s": "tuviste", "3s": "tuvo",
+            "1p": "tuvimos", "2p": "tuvisteis", "3p": "tuvieron",
+        },
+        "Future": {
+            "1s": "tendré", "2s": "tendrás", "3s": "tendrá",
+            "1p": "tendremos", "2p": "tendréis", "3p": "tendrán",
+        },
+        "Conditional": {
+            "1s": "tendría", "2s": "tendrías", "3s": "tendría",
+            "1p": "tendríamos", "2p": "tendríais", "3p": "tendrían",
+        },
+        "Subjunctive Present": {
+            "1s": "tenga", "2s": "tengas", "3s": "tenga",
+            "1p": "tengamos", "2p": "tengáis", "3p": "tengan",
+        },
+    },
+
+    "hacer": {
+        "Present": {
+            "1s": "hago", "2s": "haces", "3s": "hace",
+            "1p": "hacemos", "2p": "hacéis", "3p": "hacen",
+        },
+        "Preterite": {
+            "1s": "hice", "2s": "hiciste", "3s": "hizo",
+            "1p": "hicimos", "2p": "hicisteis", "3p": "hicieron",
+        },
+        "Future": {
+            "1s": "haré", "2s": "harás", "3s": "hará",
+            "1p": "haremos", "2p": "haréis", "3p": "harán",
+        },
+        "Conditional": {
+            "1s": "haría", "2s": "harías", "3s": "haría",
+            "1p": "haríamos", "2p": "haríais", "3p": "harían",
+        },
+        "Subjunctive Present": {
+            "1s": "haga", "2s": "hagas", "3s": "haga",
+            "1p": "hagamos", "2p": "hagáis", "3p": "hagan",
+        },
+    },
+
+    "poder": {
+        "Present": {
+            "1s": "puedo", "2s": "puedes", "3s": "puede",
+            "1p": "podemos", "2p": "podéis", "3p": "pueden",
+        },
+        "Preterite": {
+            "1s": "pude", "2s": "pudiste", "3s": "pudo",
+            "1p": "pudimos", "2p": "pudisteis", "3p": "pudieron",
+        },
+        "Future": {
+            "1s": "podré", "2s": "podrás", "3s": "podrá",
+            "1p": "podremos", "2p": "podréis", "3p": "podrán",
+        },
+        "Conditional": {
+            "1s": "podría", "2s": "podrías", "3s": "podría",
+            "1p": "podríamos", "2p": "podríais", "3p": "podrían",
+        },
+        "Subjunctive Present": {
+            "1s": "pueda", "2s": "puedas", "3s": "pueda",
+            "1p": "podamos", "2p": "podáis", "3p": "puedan",
+        },
+    },
+
+    "querer": {
+        "Present": {
+            "1s": "quiero", "2s": "quieres", "3s": "quiere",
+            "1p": "queremos", "2p": "queréis", "3p": "quieren",
+        },
+        "Preterite": {
+            "1s": "quise", "2s": "quisiste", "3s": "quiso",
+            "1p": "quisimos", "2p": "quisisteis", "3p": "quisieron",
+        },
+        "Future": {
+            "1s": "querré", "2s": "querrás", "3s": "querrá",
+            "1p": "querremos", "2p": "querréis", "3p": "querrán",
+        },
+        "Conditional": {
+            "1s": "querría", "2s": "querrías", "3s": "querría",
+            "1p": "querríamos", "2p": "querríais", "3p": "querrían",
+        },
+        "Subjunctive Present": {
+            "1s": "quiera", "2s": "quieras", "3s": "quiera",
+            "1p": "queramos", "2p": "queráis", "3p": "quieran",
+        },
+    },
+}
+
+EXAMPLE_SUBJECTS = {
+    "1s": "Yo",
+    "2s": "Tú",
+    "3s": "Él",
+    "1p": "Nosotros",
+    "2p": "Vosotros",
+    "3p": "Ellos",
+}
+
+DEFINITIONS = {
+    "Indicative": "Used for facts, real actions, habits, and statements.",
+    "Subjunctive": "Used for wishes, doubt, emotion, uncertainty, recommendations, and non-factual situations.",
+    "Conditional": "Used for would/could situations, polite requests, and hypotheticals.",
+    "Imperative": "Used to give commands or instructions.",
+    "Non-finite Forms": "Verb forms that do not change by person.",
+    "Present": "Used for actions happening now, habits, and general truths.",
+    "Imperfect": "Used for ongoing, repeated, or background actions in the past.",
+    "Preterite": "Used for completed actions in the past.",
+    "Future": "Used for actions that will happen in the future.",
+    "Present Perfect": "Used for actions that have happened and are relevant to the present.",
+    "Pluperfect": "Used for actions that had happened before another past action.",
+    "Future Perfect": "Used for actions that will have been completed before a future point.",
+    "Imperfect Subjunctive (-ra)": "Used for hypothetical, doubtful, or uncertain situations in the past.",
+    "Imperfect Subjunctive (-se)": "An alternate form of the imperfect subjunctive.",
+    "Conditional Perfect": "Used for actions that would have happened under certain conditions.",
+    "Affirmative": "Positive commands.",
+    "Negative": "Negative commands.",
+}
+
+HABER = {
+    "present_perfect": {
+        "1s": "he", "2s": "has", "3s": "ha",
+        "1p": "hemos", "2p": "habéis", "3p": "han",
+    },
+    "pluperfect": {
+        "1s": "había", "2s": "habías", "3s": "había",
+        "1p": "habíamos", "2p": "habíais", "3p": "habían",
+    },
+    "future_perfect": {
+        "1s": "habré", "2s": "habrás", "3s": "habrá",
+        "1p": "habremos", "2p": "habréis", "3p": "habrán",
+    },
+    "conditional_perfect": {
+        "1s": "habría", "2s": "habrías", "3s": "habría",
+        "1p": "habríamos", "2p": "habríais", "3p": "habrían",
+    },
+}
+
+VERB_CONTEXTS = {
+    "hablar": {
+        "1s": "con mi amigo por teléfono",
+        "2s": "español en clase",
+        "3s": "con su familia",
+        "1p": "sobre el trabajo",
+        "2p": "muy rápido",
+        "3p": "con el profesor",
+    },
+    "tomar": {
+        "1s": "café por la mañana",
+        "2s": "agua después de correr",
+        "3s": "el autobús al trabajo",
+        "1p": "notas en clase",
+        "2p": "fotos durante el viaje",
+        "3p": "decisiones importantes",
+    },
+    "comer": {
+        "1s": "fruta en el desayuno",
+        "2s": "arroz con pollo",
+        "3s": "en un restaurante",
+        "1p": "juntos los domingos",
+        "2p": "verduras frescas",
+        "3p": "pizza los viernes",
+    },
+    "vivir": {
+        "1s": "en una casa pequeña",
+        "2s": "cerca del parque",
+        "3s": "en la ciudad",
+        "1p": "en un apartamento",
+        "2p": "lejos del centro",
+        "3p": "con sus padres",
+    },
+    "estudiar": {
+        "1s": "español por la noche",
+        "2s": "para el examen",
+        "3s": "en la biblioteca",
+        "1p": "juntos después del trabajo",
+        "2p": "mucho en la universidad",
+        "3p": "matemáticas todos los días",
+    },
+    "trabajar": {
+        "1s": "en una fábrica",
+        "2s": "los fines de semana",
+        "3s": "en una oficina",
+        "1p": "en equipo",
+        "2p": "muchas horas",
+        "3p": "en el taller",
+    },
+    "caminar": {
+        "1s": "por el parque",
+        "2s": "hasta la tienda",
+        "3s": "con su perro",
+        "1p": "por la playa",
+        "2p": "por la ciudad",
+        "3p": "después de cenar",
+    },
+    "beber": {
+        "1s": "agua fría",
+        "2s": "café por la tarde",
+        "3s": "té caliente",
+        "1p": "jugo en el desayuno",
+        "2p": "agua durante el viaje",
+        "3p": "leche con la cena",
+    },
+    "leer": {
+        "1s": "un libro interesante",
+        "2s": "el periódico",
+        "3s": "una carta",
+        "1p": "historias en español",
+        "2p": "las instrucciones",
+        "3p": "muchos artículos",
+    },
+    "escribir": {
+        "1s": "un correo electrónico",
+        "2s": "una carta",
+        "3s": "en su cuaderno",
+        "1p": "mensajes en español",
+        "2p": "notas importantes",
+        "3p": "historias cortas",
+    },
+    "aprender": {
+        "1s": "palabras nuevas",
+        "2s": "la gramática",
+        "3s": "muy rápido",
+        "1p": "juntos en clase",
+        "2p": "con práctica",
+        "3p": "algo nuevo cada día",
+    },
+    "correr": {
+        "1s": "por la mañana",
+        "2s": "en el parque",
+        "3s": "muy rápido",
+        "1p": "después del trabajo",
+        "2p": "en la pista",
+        "3p": "todos los días",
+    },
+    "abrir": {
+        "1s": "la puerta",
+        "2s": "la ventana",
+        "3s": "el libro",
+        "1p": "la tienda temprano",
+        "2p": "los regalos",
+        "3p": "sus mochilas",
+    },
+    "recibir": {
+        "1s": "un mensaje",
+        "2s": "una llamada",
+        "3s": "una carta",
+        "1p": "buenas noticias",
+        "2p": "ayuda del profesor",
+        "3p": "paquetes en casa",
+    },
+    "subir": {
+        "1s": "las escaleras",
+        "2s": "una foto a internet",
+        "3s": "al segundo piso",
+        "1p": "a la montaña",
+        "2p": "los archivos",
+        "3p": "al autobús",
+    },
+}
+
+def heading(level, title):
+    definition = DEFINITIONS.get(title, "")
+    if definition:
+        return f"<h{level}>{title}</h{level}><p class='definition'>{definition}</p>"
+    return f"<h{level}>{title}</h{level}>"
+
+def ending_type(verb):
+    if verb.endswith("ar"):
+        return "ar"
+    if verb.endswith("er"):
+        return "er"
+    if verb.endswith("ir"):
+        return "ir"
+    return ""
+
+def stem(verb):
+    return verb[:-2]
+
+def past_participle(verb):
+    kind = ending_type(verb)
+    if kind == "ar":
+        return stem(verb) + "ado"
+    if kind in ["er", "ir"]:
+        return stem(verb) + "ido"
+    return verb
+
+def gerund(verb):
+    kind = ending_type(verb)
+    if kind == "ar":
+        return stem(verb) + "ando"
+    if kind in ["er", "ir"]:
+        return stem(verb) + "iendo"
+    return verb
+
+def verb_definition_box(verb):
+    meaning = VERB_DEFINITIONS.get(
+        verb,
+        "No local definition found yet. Add this verb to VERB_DEFINITIONS in app.py."
+    )
+
+    return f"""
+    <div class="verb-card">
+        <h2>{verb}</h2>
+        <p><strong>English meaning:</strong> {meaning}</p>
+    </div>
+    """
+
+def context_for(verb, person):
+    default_contexts = {
+        "1s": "todos los días",
+        "2s": "con frecuencia",
+        "3s": "por la tarde",
+        "1p": "juntos",
+        "2p": "en clase",
+        "3p": "en casa",
+    }
+
+    return VERB_CONTEXTS.get(verb, default_contexts).get(person, "")
+
+def make_example(verb, person, form, title):
+    subject = EXAMPLE_SUBJECTS.get(person, "")
+    context = context_for(verb, person)
+
+    if not subject:
+        return ""
+
+    lower_subject = subject.lower()
+
+    if title == "Present":
+        return f"{subject} {form} {context}."
+
+    if title == "Imperfect":
+        return f"Antes, {subject.lower()} {form} {context}."
+
+    if title == "Preterite":
+        return f"Ayer, {subject.lower()} {form} {context}."
+
+    if title == "Future":
+        return f"Mañana, {subject.lower()} {form} {context}."
+
+    if title == "Present Perfect":
+        return f"Hoy, {subject.lower()} {form} {context}."
+
+    if title == "Pluperfect":
+        return f"{subject} ya {form} {context} antes de salir."
+
+    if title == "Future Perfect":
+        return f"{subject} ya {form} {context} antes de mañana."
+
+    if title == "Conditional":
+        return f"{subject} {form} {context} si tuviera tiempo."
+
+    if title == "Conditional Perfect":
+        return f"{subject} {form} {context} si hubiera tenido tiempo."
+
+    if title == "Subjunctive Present":
+        return f"Espero que {lower_subject} {form} {context}."
+
+    if title == "Imperfect Subjunctive (-ra)":
+        return f"Quería que {lower_subject} {form} {context}."
+
+    if title == "Imperfect Subjunctive (-se)":
+        return f"Era importante que {lower_subject} {form} {context}."
+
+    return f"{subject} {form} {context}."
+
+def make_rows(forms, title, verb_text):
+    html = ["<table>", "<tr><th>Person</th><th>Conjugation</th><th>Example Sentence</th></tr>"]
+
+    for person, form in forms.items():
+        example = make_example(verb_text, person, form, title)
+        html.append(
+            f"<tr><td>{PERSONS[person]}</td><td>{form}</td><td>{example}</td></tr>"
+        )
+
+    html.append("</table>")
+    return "\n".join(html)
+
+def get_simple_tense(verb_obj, mood, tense, verb_text=None, title=None):
+    if (
+        verb_text
+        and title
+        and verb_text in IRREGULAR_OVERRIDES
+        and title in IRREGULAR_OVERRIDES[verb_text]
+    ):
+        return IRREGULAR_OVERRIDES[verb_text][title]
+
+    return verb_obj.conjug_info.get(mood, {}).get(tense, {})
+
+def make_compound_rows(participle, haber_key, title, verb_text):
+    forms = {p: f"{aux} {participle}" for p, aux in HABER[haber_key].items()}
+    return make_rows(forms, title, verb_text)
+
+def make_imperative(verb_text):
+    kind = ending_type(verb_text)
+    s = stem(verb_text)
+
+    if kind not in ["ar", "er", "ir"]:
+        return ""
+
+    context = VERB_CONTEXTS.get(verb_text, {}).get("2s", "por favor")
+
+    html = [heading(2, "Imperative")]
+
+    if kind == "ar":
+        affirmative = {"tú": s+"a", "usted": s+"e", "nosotros": s+"emos", "vosotros": s+"ad", "ustedes": s+"en"}
+        negative = {"tú": "no "+s+"es", "usted": "no "+s+"e", "nosotros": "no "+s+"emos", "vosotros": "no "+s+"éis", "ustedes": "no "+s+"en"}
+    elif kind == "er":
+        affirmative = {"tú": s+"e", "usted": s+"a", "nosotros": s+"amos", "vosotros": s+"ed", "ustedes": s+"an"}
+        negative = {"tú": "no "+s+"as", "usted": "no "+s+"a", "nosotros": "no "+s+"amos", "vosotros": "no "+s+"áis", "ustedes": "no "+s+"an"}
+    else:
+        affirmative = {"tú": s+"e", "usted": s+"a", "nosotros": s+"amos", "vosotros": s+"id", "ustedes": s+"an"}
+        negative = {"tú": "no "+s+"as", "usted": "no "+s+"a", "nosotros": "no "+s+"amos", "vosotros": "no "+s+"áis", "ustedes": "no "+s+"an"}
+
+    for title, forms in [("Affirmative", affirmative), ("Negative", negative)]:
+        html.append(heading(3, title))
+        html.append("<table><tr><th>Person</th><th>Conjugation</th><th>Example Sentence</th></tr>")
+
+        for person, form in forms.items():
+            if title == "Affirmative":
+                example = f"{form.capitalize()} {context}, por favor."
+            else:
+                example = f"{form.capitalize()} {context} ahora."
+
+            html.append(f"<tr><td>{person}</td><td>{form}</td><td>{example}</td></tr>")
+
+        html.append("</table>")
+
+    return "\n".join(html)
+
+def make_table(verb_text, verb_obj):
+    html = [verb_definition_box(verb_text)]
+    pp = past_participle(verb_text)
+
+    html.append(heading(2, "Indicative"))
+
+    for title, mood, tense in [
+        ("Present", "Indicativo", "Indicativo presente"),
+        ("Imperfect", "Indicativo", "Indicativo pretérito imperfecto"),
+        ("Preterite", "Indicativo", "Indicativo pretérito perfecto simple"),
+        ("Future", "Indicativo", "Indicativo futuro"),
+    ]:
+        forms = get_simple_tense(verb_obj, mood, tense, verb_text, title)
+        if forms:
+            html.append(heading(3, title))
+            html.append(make_rows(forms, title, verb_text))
+
+    for title, key in [
+        ("Present Perfect", "present_perfect"),
+        ("Pluperfect", "pluperfect"),
+        ("Future Perfect", "future_perfect"),
+    ]:
+        html.append(heading(3, title))
+        html.append(make_compound_rows(pp, key, title, verb_text))
+
+    html.append(heading(2, "Subjunctive"))
+
+    for title, mood, tense in [
+        ("Subjunctive Present", "Subjuntivo", "Subjuntivo presente"),
+        ("Imperfect Subjunctive (-ra)", "Subjuntivo", "Subjuntivo pretérito imperfecto 1"),
+        ("Imperfect Subjunctive (-se)", "Subjuntivo", "Subjuntivo pretérito imperfecto 2"),
+        ("Future", "Subjuntivo", "Subjuntivo futuro"),
+    ]:
+        forms = get_simple_tense(verb_obj, mood, tense, verb_text, title)
+        if forms:
+            html.append(heading(3, title))
+            html.append(make_rows(forms, title, verb_text))
+
+    html.append(heading(2, "Conditional"))
+
+    forms = get_simple_tense(
+        verb_obj,
+        "Condicional",
+        "Condicional Condicional",
+        verb_text,
+        "Conditional"
+    )
+    if forms:
+        html.append(heading(3, "Conditional"))
+        html.append(make_rows(forms, "Conditional", verb_text))
+
+    html.append(heading(3, "Conditional Perfect"))
+    html.append(make_compound_rows(pp, "conditional_perfect", "Conditional Perfect", verb_text))
+
+    html.append(make_imperative(verb_text))
+
+    html.append(heading(2, "Non-finite Forms"))
+    html.append(f"""
+    <table>
+        <tr><th>Form</th><th>Spanish</th><th>Example Sentence</th></tr>
+        <tr><td>Infinitive</td><td>{verb_text}</td><td>Me gusta {verb_text}.</td></tr>
+        <tr><td>Gerund</td><td>{gerund(verb_text)}</td><td>Estoy {gerund(verb_text)} ahora.</td></tr>
+        <tr><td>Past Participle</td><td>{pp}</td><td>He {pp} hoy.</td></tr>
+    </table>
+    """)
+
+    return "\n".join(html)
+
+@app.route("/", methods=["GET", "POST"])
+def home():
+    output = ""
+
+    if request.method == "POST":
+        verb_text = request.form.get("verb", "").strip().lower()
+
+        try:
+            verb_obj = conjugator.conjugate(verb_text)
+            output = make_table(verb_text, verb_obj)
+        except Exception as e:
+            output = f"<p>Error: {e}</p>"
+
+    return f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Offline Spanish Conjugator</title>
+        <style>
+            body {{
+                font-family: system-ui, sans-serif;
+                margin: 30px auto;
+                max-width: 1200px;
+                line-height: 1.4;
+                background: #ffffff;
+                color: #111111;
+            }}
+
+            body.dark-mode {{
+                background: #121212;
+                color: #eeeeee;
+            }}
+
+            .top-bar {{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 15px;
+                margin-bottom: 25px;
+            }}
+
+            .verb-card {{
+                border: 1px solid #ccc;
+                padding: 15px;
+                margin-top: 25px;
+                margin-bottom: 25px;
+                background: #f8f8f8;
+            }}
+
+            body.dark-mode .verb-card {{
+                background: #222222;
+                border-color: #555555;
+            }}
+
+            input[type=text] {{
+                width: 260px;
+                font-size: 18px;
+                padding: 8px;
+            }}
+
+            input[type=submit],
+            button {{
+                font-size: 18px;
+                padding: 8px 12px;
+                cursor: pointer;
+            }}
+
+            table {{
+                border-collapse: collapse;
+                margin-bottom: 35px;
+                width: 100%;
+            }}
+
+            th, td {{
+                border: 1px solid #ccc;
+                padding: 8px;
+                text-align: left;
+                vertical-align: top;
+            }}
+
+            th {{
+                background: #e5e5e5;
+            }}
+
+            tr:nth-child(even) {{
+                background: #f8f8f8;
+            }}
+
+            body.dark-mode th {{
+                background: #333333;
+            }}
+
+            body.dark-mode td,
+            body.dark-mode th {{
+                border-color: #555555;
+            }}
+
+            body.dark-mode tr:nth-child(even) {{
+                background: #222222;
+            }}
+
+            body.dark-mode input,
+            body.dark-mode button {{
+                background: #222222;
+                color: #eeeeee;
+                border: 1px solid #555555;
+            }}
+
+            h2 {{
+                margin-top: 35px;
+                border-bottom: 2px solid #333;
+            }}
+
+            body.dark-mode h2 {{
+                border-bottom: 2px solid #eeeeee;
+            }}
+
+            .definition {{
+                margin-top: -8px;
+                margin-bottom: 15px;
+                color: #666666;
+                font-style: italic;
+            }}
+
+            body.dark-mode .definition {{
+                color: #bbbbbb;
+            }}
+        </style>
+    </head>
+
+    <body>
+        <div class="top-bar">
+            <h1>Offline Spanish Conjugator</h1>
+            <button onclick="toggleDarkMode()" id="darkButton">🌙 Dark Mode</button>
+        </div>
+
+        <form method="post">
+            <input type="text" name="verb" placeholder="comer, vivir, hablar" autofocus>
+            <input type="submit" value="Conjugate">
+        </form>
+
+        {output}
+
+        <script>
+            function setButtonText() {{
+                const button = document.getElementById("darkButton");
+                button.textContent = document.body.classList.contains("dark-mode")
+                    ? "☀️ Light Mode"
+                    : "🌙 Dark Mode";
+            }}
+
+            function toggleDarkMode() {{
+                document.body.classList.toggle("dark-mode");
+                localStorage.setItem(
+                    "theme",
+                    document.body.classList.contains("dark-mode") ? "dark" : "light"
+                );
+                setButtonText();
+            }}
+
+            if (localStorage.getItem("theme") === "dark") {{
+                document.body.classList.add("dark-mode");
+            }}
+
+            setButtonText();
+        </script>
+    </body>
+    </html>
+    """
+
+if __name__ == "__main__":
+    import threading
+    import webbrowser
+
+    def open_browser():
+        webbrowser.open("http://127.0.0.1:5000")
+
+    threading.Timer(1.5, open_browser).start()
+
+    app.run(port=5000, debug=True)
