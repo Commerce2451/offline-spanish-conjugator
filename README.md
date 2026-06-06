@@ -12,6 +12,10 @@ A fully offline Spanish verb conjugator built with Python and Flask.
 - Dark mode
 - Linux, Windows, and macOS support
 
+  # Offline Spanish Conjugator
+
+![Main Screen](screenshots/main.png)
+
 ## Installation
 
 ## Linux Mint / Ubuntu
