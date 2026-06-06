@@ -12,9 +12,21 @@ A fully offline Spanish verb conjugator built with Python and Flask.
 - Dark mode
 - Linux, Windows, and macOS support
 
+<<<<<<< HEAD
 # Offline Spanish Conjugator
 
 ![Main Screen](screenshots/main.png)
+=======
+  # Offline Spanish Conjugator
+
+<img src="[https://raw.githubusercontent.com/Commerce2451/offline-spanish-conjugator/refs/heads/main/Screenshot%20from%202026-06-06%2008-00-48.png]" alt="Screenshot" />
+
+## Known Limitations
+
+- Uses mlconjug3 as the primary conjugation engine.
+- Some irregular verbs are manually overridden.
+- Additional irregular verb coverage is planned.
+>>>>>>> 4d6b99fc02ee25e753f53ed49b46b93779f7c354
 
 ## Installation
 
@@ -72,6 +84,9 @@ Ctrl + C
 ```
 
 in the terminal running the application.
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4d6b99fc02ee25e753f53ed49b46b93779f7c354
 
 
