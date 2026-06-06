@@ -24,6 +24,20 @@ VERB_DEFINITIONS = {
     "abrir": "to open",
     "recibir": "to receive",
     "subir": "to go up; to upload",
+    "ser": "to be (identity, origin, characteristics)",
+    "estar": "to be (location, condition, temporary state)",
+    "ir": "to go",
+    "tener": "to have",
+    "hacer": "to do; to make",
+    "poder": "to be able to; can",
+    "querer": "to want; to love",
+    "decir": "to say; to tell",
+    "venir": "to come",
+    "poner": "to put; to place",
+    "salir": "to leave; to go out",
+    "dar": "to give",
+    "ver": "to see",
+    "saber": "to know (facts/information)",
 }
 
 PERSONS = {
@@ -206,6 +220,195 @@ IRREGULAR_OVERRIDES = {
         "Subjunctive Present": {
             "1s": "quiera", "2s": "quieras", "3s": "quiera",
             "1p": "queramos", "2p": "queráis", "3p": "quieran",
+        },
+    },
+
+    "decir": {
+        "Present": {
+            "1s": "digo", "2s": "dices", "3s": "dice",
+            "1p": "decimos", "2p": "decís", "3p": "dicen",
+        },
+        "Imperfect": {
+            "1s": "decía", "2s": "decías", "3s": "decía",
+            "1p": "decíamos", "2p": "decíais", "3p": "decían",
+        },
+        "Preterite": {
+            "1s": "dije", "2s": "dijiste", "3s": "dijo",
+            "1p": "dijimos", "2p": "dijisteis", "3p": "dijeron",
+        },
+        "Future": {
+            "1s": "diré", "2s": "dirás", "3s": "dirá",
+            "1p": "diremos", "2p": "diréis", "3p": "dirán",
+        },
+        "Conditional": {
+            "1s": "diría", "2s": "dirías", "3s": "diría",
+            "1p": "diríamos", "2p": "diríais", "3p": "dirían",
+        },
+        "Subjunctive Present": {
+            "1s": "diga", "2s": "digas", "3s": "diga",
+            "1p": "digamos", "2p": "digáis", "3p": "digan",
+        },
+    },
+
+    "venir": {
+        "Present": {
+            "1s": "vengo", "2s": "vienes", "3s": "viene",
+            "1p": "venimos", "2p": "venís", "3p": "vienen",
+        },
+        "Imperfect": {
+            "1s": "venía", "2s": "venías", "3s": "venía",
+            "1p": "veníamos", "2p": "veníais", "3p": "venían",
+        },
+        "Preterite": {
+            "1s": "vine", "2s": "viniste", "3s": "vino",
+            "1p": "vinimos", "2p": "vinisteis", "3p": "vinieron",
+        },
+        "Future": {
+            "1s": "vendré", "2s": "vendrás", "3s": "vendrá",
+            "1p": "vendremos", "2p": "vendréis", "3p": "vendrán",
+        },
+        "Conditional": {
+            "1s": "vendría", "2s": "vendrías", "3s": "vendría",
+            "1p": "vendríamos", "2p": "vendríais", "3p": "vendrían",
+        },
+        "Subjunctive Present": {
+            "1s": "venga", "2s": "vengas", "3s": "venga",
+            "1p": "vengamos", "2p": "vengáis", "3p": "vengan",
+        },
+    },
+
+    "poner": {
+        "Present": {
+            "1s": "pongo", "2s": "pones", "3s": "pone",
+            "1p": "ponemos", "2p": "ponéis", "3p": "ponen",
+        },
+        "Imperfect": {
+            "1s": "ponía", "2s": "ponías", "3s": "ponía",
+            "1p": "poníamos", "2p": "poníais", "3p": "ponían",
+        },
+        "Preterite": {
+            "1s": "puse", "2s": "pusiste", "3s": "puso",
+            "1p": "pusimos", "2p": "pusisteis", "3p": "pusieron",
+        },
+        "Future": {
+            "1s": "pondré", "2s": "pondrás", "3s": "pondrá",
+            "1p": "pondremos", "2p": "pondréis", "3p": "pondrán",
+        },
+        "Conditional": {
+            "1s": "pondría", "2s": "pondrías", "3s": "pondría",
+            "1p": "pondríamos", "2p": "pondríais", "3p": "pondrían",
+        },
+        "Subjunctive Present": {
+            "1s": "ponga", "2s": "pongas", "3s": "ponga",
+            "1p": "pongamos", "2p": "pongáis", "3p": "pongan",
+        },
+    },
+
+    "salir": {
+        "Present": {
+            "1s": "salgo", "2s": "sales", "3s": "sale",
+            "1p": "salimos", "2p": "salís", "3p": "salen",
+        },
+        "Imperfect": {
+            "1s": "salía", "2s": "salías", "3s": "salía",
+            "1p": "salíamos", "2p": "salíais", "3p": "salían",
+        },
+        "Preterite": {
+            "1s": "salí", "2s": "saliste", "3s": "salió",
+            "1p": "salimos", "2p": "salisteis", "3p": "salieron",
+        },
+        "Future": {
+            "1s": "saldré", "2s": "saldrás", "3s": "saldrá",
+            "1p": "saldremos", "2p": "saldréis", "3p": "saldrán",
+        },
+        "Conditional": {
+            "1s": "saldría", "2s": "saldrías", "3s": "saldría",
+            "1p": "saldríamos", "2p": "saldríais", "3p": "saldrían",
+        },
+        "Subjunctive Present": {
+            "1s": "salga", "2s": "salgas", "3s": "salga",
+            "1p": "salgamos", "2p": "salgáis", "3p": "salgan",
+        },
+    },
+
+    "dar": {
+        "Present": {
+            "1s": "doy", "2s": "das", "3s": "da",
+            "1p": "damos", "2p": "dais", "3p": "dan",
+        },
+        "Imperfect": {
+            "1s": "daba", "2s": "dabas", "3s": "daba",
+            "1p": "dábamos", "2p": "dabais", "3p": "daban",
+        },
+        "Preterite": {
+            "1s": "di", "2s": "diste", "3s": "dio",
+            "1p": "dimos", "2p": "disteis", "3p": "dieron",
+        },
+        "Future": {
+            "1s": "daré", "2s": "darás", "3s": "dará",
+            "1p": "daremos", "2p": "daréis", "3p": "darán",
+        },
+        "Conditional": {
+            "1s": "daría", "2s": "darías", "3s": "daría",
+            "1p": "daríamos", "2p": "daríais", "3p": "darían",
+        },
+        "Subjunctive Present": {
+            "1s": "dé", "2s": "des", "3s": "dé",
+            "1p": "demos", "2p": "deis", "3p": "den",
+        },
+    },
+
+    "ver": {
+        "Present": {
+            "1s": "veo", "2s": "ves", "3s": "ve",
+            "1p": "vemos", "2p": "veis", "3p": "ven",
+        },
+        "Imperfect": {
+            "1s": "veía", "2s": "veías", "3s": "veía",
+            "1p": "veíamos", "2p": "veíais", "3p": "veían",
+        },
+        "Preterite": {
+            "1s": "vi", "2s": "viste", "3s": "vio",
+            "1p": "vimos", "2p": "visteis", "3p": "vieron",
+        },
+        "Future": {
+            "1s": "veré", "2s": "verás", "3s": "verá",
+            "1p": "veremos", "2p": "veréis", "3p": "verán",
+        },
+        "Conditional": {
+            "1s": "vería", "2s": "verías", "3s": "vería",
+            "1p": "veríamos", "2p": "veríais", "3p": "verían",
+        },
+        "Subjunctive Present": {
+            "1s": "vea", "2s": "veas", "3s": "vea",
+            "1p": "veamos", "2p": "veáis", "3p": "vean",
+        },
+    },
+
+    "saber": {
+        "Present": {
+            "1s": "sé", "2s": "sabes", "3s": "sabe",
+            "1p": "sabemos", "2p": "sabéis", "3p": "saben",
+        },
+        "Imperfect": {
+            "1s": "sabía", "2s": "sabías", "3s": "sabía",
+            "1p": "sabíamos", "2p": "sabíais", "3p": "sabían",
+        },
+        "Preterite": {
+            "1s": "supe", "2s": "supiste", "3s": "supo",
+            "1p": "supimos", "2p": "supisteis", "3p": "supieron",
+        },
+        "Future": {
+            "1s": "sabré", "2s": "sabrás", "3s": "sabrá",
+            "1p": "sabremos", "2p": "sabréis", "3p": "sabrán",
+        },
+        "Conditional": {
+            "1s": "sabría", "2s": "sabrías", "3s": "sabría",
+            "1p": "sabríamos", "2p": "sabríais", "3p": "sabrían",
+        },
+        "Subjunctive Present": {
+            "1s": "sepa", "2s": "sepas", "3s": "sepa",
+            "1p": "sepamos", "2p": "sepáis", "3p": "sepan",
         },
     },
 }
